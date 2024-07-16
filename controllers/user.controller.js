@@ -4,7 +4,7 @@ const usersCollection = db.collection("users");
 
 // add user
 const addUser = async (req, res) => {
-  const { name, email, phone, pin, role } = req.body;
+  const { name, email, phone, pin, role, bal, image } = req.body;
   const existingUser = await usersCollection.findOne({ phone: phone });
   if (existingUser) {
     return res.status(409).send("User already exists");
@@ -16,6 +16,8 @@ const addUser = async (req, res) => {
     phone,
     pinNumber: finalPin,
     role,
+    bal,
+    image,
   });
   res.send(result);
 };
