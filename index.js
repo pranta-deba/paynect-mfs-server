@@ -8,7 +8,10 @@ app.use(express.json());
 
 // routes
 const testRoute = require("./routes/test.route");
+const userRoute = require("./routes/user.router");
 app.use("/test", testRoute);
+
+app.use("/user", userRoute);
 
 
 
