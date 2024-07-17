@@ -10,10 +10,12 @@ app.use(express.json());
 const testRoute = require("./routes/test.route");
 const userRoute = require("./routes/user.router");
 const transactionRouter = require("./routes/transaction.route");
-app.use("/test", testRoute);
+const adminRoute = require("./routes/admin.route");
 
+app.use("/test", testRoute);
 app.use("/user", userRoute);
 app.use("/transaction", transactionRouter);
+app.use("/admin", adminRoute);
 
 app.get("/", async (req, res) => {
   res.send({ data: "Hello, paynect Server!" });
