@@ -1,6 +1,7 @@
 const { db } = require("../utils/dbConnect");
 const bcrypt = require("bcrypt");
 const usersCollection = db.collection("users");
+const transactionCollection = db.collection("transaction");
 
 // add user
 const addUser = async (req, res) => {
@@ -52,4 +53,23 @@ const loginUser = async (req, res) => {
   res.send(user);
 };
 
-module.exports = { addUser, allUsers, getSingleUser, loginUser };
+// all transactions
+const allTransitions = async (req, res) => {
+  const { phone } = req.body;
+  console.log(phone);
+  const result = await transactionCollection
+    .find({
+      $or: [{ from: phone }, { to: phone }],
+    })
+    .toArray();
+  console.log(result);
+  res.send(result);
+};
+
+module.exports = {
+  addUser,
+  allUsers,
+  getSingleUser,
+  loginUser,
+  allTransitions,
+};
