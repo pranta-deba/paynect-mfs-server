@@ -68,6 +68,8 @@ const sendMoney = async (req, res) => {
   }
   res.send(result);
 };
+
+
 // cashout
 const CashOut = async (req, res) => {
   const { to, pin, from, amount } = req.body;

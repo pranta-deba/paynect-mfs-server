@@ -56,7 +56,6 @@ const loginUser = async (req, res) => {
 // all transactions
 const allTransitions = async (req, res) => {
   const { phone } = req.body;
-  console.log(phone);
   const result = await transactionCollection
     .find({
       $or: [{ from: phone }, { to: phone }],
