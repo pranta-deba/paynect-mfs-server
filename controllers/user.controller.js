@@ -61,7 +61,6 @@ const allTransitions = async (req, res) => {
       $or: [{ from: phone }, { to: phone }],
     })
     .toArray();
-  console.log(result);
   res.send(result);
 };
 

@@ -13,7 +13,7 @@ const generateRandomNumber = (length) => {
   return result;
 };
 
-// sendMoney
+// send money
 const sendMoney = async (req, res) => {
   const { to, pin, from, amount } = req.body;
 
@@ -69,8 +69,7 @@ const sendMoney = async (req, res) => {
   res.send(result);
 };
 
-
-// cashout
+// cash out
 const CashOut = async (req, res) => {
   const { to, pin, from, amount } = req.body;
 
@@ -125,4 +124,30 @@ const CashOut = async (req, res) => {
   res.send(result);
 };
 
-module.exports = { sendMoney, CashOut };
+// cash in
+const CashIn = async (req, res) => {
+  const { to, pin, from, amount } = req.body;
+  const fromUser = await usersCollection.findOne({ phone: from });
+  const isMatchPin = bcrypt.compareSync(pin, fromUser.pinNumber);
+  if (!isMatchPin) {
+    return res.send({ message: "Incorrect pin!" });
+  }
+  const toAgent = await usersCollection.findOne({ phone: to });
+  if (!toAgent || toAgent.role !== "agent") {
+    return res.send({ message: "Please provide a correct agent number!" });
+  }
+  const transactionNumber = generateRandomNumber(16);
+  const result = await transactionCollection.insertOne({
+    to: from,
+    from: to,
+    amount,
+    date: new Date(),
+    system: "cash in",
+    message: `${fromUser.name} cash in of ${amount} tk to ${toAgent.name}`,
+    transactionNumber,
+    approved: false,
+  });
+  res.send(result);
+};
+
+module.exports = { sendMoney, CashOut, CashIn };
