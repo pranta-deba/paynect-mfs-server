@@ -2,6 +2,7 @@ const { db } = require("../utils/dbConnect");
 const bcrypt = require("bcrypt");
 const usersCollection = db.collection("users");
 const transactionCollection = db.collection("transaction");
+const jwt = require("jsonwebtoken");
 
 // add user
 const addUser = async (req, res) => {
@@ -20,7 +21,10 @@ const addUser = async (req, res) => {
     bal,
     image,
   });
-  res.send(result);
+  const token = jwt.sign({ phone: phone }, process.env.ACCESS_TOKEN, {
+    expiresIn: "1h",
+  });
+  res.send({ result, token });
 };
 
 // all users
@@ -36,7 +40,10 @@ const getSingleUser = async (req, res) => {
   if (!user) {
     return res.status(404).send("User not found");
   }
-  res.send(user);
+  const token = jwt.sign(req.body, process.env.ACCESS_TOKEN, {
+    expiresIn: "1h",
+  });
+  res.send({ token: token, user });
 };
 
 // login user
@@ -50,7 +57,10 @@ const loginUser = async (req, res) => {
   if (!isMatch) {
     return res.send({ message: "Incorrect pin!" });
   }
-  res.send(user);
+  const token = jwt.sign({ phone: phone }, process.env.ACCESS_TOKEN, {
+    expiresIn: "1h",
+  });
+  res.send({ user, token });
 };
 
 // all transactions

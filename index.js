@@ -3,8 +3,27 @@ const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://paynect-mfs.web.app",
+      "https://paynect-mfs.firebaseapp.com",
+    ],
+  })
+);
 app.use(cors());
 app.use(express.json());
+
+// create token
+app.post("/jwt", async (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
+    expiresIn: "1h",
+  });
+  res.send({ token: token });
+});
 
 // routes
 const testRoute = require("./routes/test.route");
